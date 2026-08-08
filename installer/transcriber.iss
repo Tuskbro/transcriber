@@ -1,5 +1,5 @@
 #define APP_NAME "Transcriber"
-#define APP_VERSION "1.0.0"
+#define APP_VERSION "0.5.0"
 #define APP_PUBLISHER "Transcriber Project"
 #define APP_EXE "Transcriber.exe"
 

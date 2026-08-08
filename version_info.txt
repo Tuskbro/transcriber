@@ -1,7 +1,7 @@
 VSVersionInfo(
   ffi=FixedFileInfo(
-    filevers=(1, 0, 0, 0),
-    prodvers=(1, 0, 0, 0),
+    filevers=(0, 5, 0, 0),
+    prodvers=(0, 5, 0, 0),
     mask=0x3f,
     flags=0x0,
     OS=0x40004,
@@ -16,12 +16,12 @@ VSVersionInfo(
         [
           StringStruct(u'CompanyName', u'Transcriber Project'),
           StringStruct(u'FileDescription', u'Local audio and Telegram Chat Export transcriber'),
-          StringStruct(u'FileVersion', u'1.0.0'),
+          StringStruct(u'FileVersion', u'0.5.0'),
           StringStruct(u'InternalName', u'Transcriber'),
           StringStruct(u'LegalCopyright', u'GPL-3.0'),
           StringStruct(u'OriginalFilename', u'Transcriber.exe'),
           StringStruct(u'ProductName', u'Transcriber'),
-          StringStruct(u'ProductVersion', u'1.0.0'),
+          StringStruct(u'ProductVersion', u'0.5.0'),
         ],
       )
     ]),

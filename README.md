@@ -78,7 +78,7 @@ JSON и Markdown в отдельную папку:
 build.bat
 ```
 
-PyInstaller создаёт папку `dist\Transcriber`. Если установлен Inno Setup 6, дополнительно создаётся `installer\output\Transcriber-Setup-1.0.0.exe`.
+PyInstaller создаёт папку `dist\Transcriber`. Если установлен Inno Setup 6, дополнительно создаётся `installer\output\Transcriber-Setup-0.5.0.exe`.
 
 ## Примечания
 
