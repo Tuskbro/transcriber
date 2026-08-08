@@ -1,0 +1,25 @@
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+*.pyo
+.pytest_cache/
+.cache/
+
+# Build artifacts
+build/
+dist/
+installer/output/
+*.spec.bak
+
+# Local data and generated transcriptions
+ChatExport_*/
+demo/
+transcriptions/
+*.html.bak
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
