@@ -126,6 +126,28 @@ Root: HKA; Subkey: "Software\Classes\Directory\Background\shell\TranscriberToJso
 Root: HKA; Subkey: "Software\Classes\Directory\Background\shell\TranscriberChatExport"; ValueType: string; ValueName: ""; ValueData: "Добавить транскрипции в экспорт чата"; Flags: uninsdeletekey; Tasks: contextmenu
 Root: HKA; Subkey: "Software\Classes\Directory\Background\shell\TranscriberChatExport"; ValueType: string; ValueName: "Icon"; ValueData: "{app}\Transcriber.exe"; Tasks: contextmenu
 Root: HKA; Subkey: "Software\Classes\Directory\Background\shell\TranscriberChatExport\command"; ValueType: string; ValueName: ""; ValueData: """{app}\ChatExportParser.exe"" ""%V"""; Tasks: contextmenu
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.jpg\shell\TranscriberDescribeImage"; ValueType: string; ValueName: ""; ValueData: "Описать изображение"; Flags: uninsdeletekey; Tasks: contextmenu
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.jpg\shell\TranscriberDescribeImage"; ValueType: string; ValueName: "Icon"; ValueData: "{app}\Transcriber.exe"; Tasks: contextmenu
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.jpg\shell\TranscriberDescribeImage\command"; ValueType: string; ValueName: ""; ValueData: """{app}\ImageDescriber.exe"" ""%1"""; Tasks: contextmenu
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.jpeg\shell\TranscriberDescribeImage"; ValueType: string; ValueName: ""; ValueData: "Описать изображение"; Flags: uninsdeletekey; Tasks: contextmenu
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.jpeg\shell\TranscriberDescribeImage"; ValueType: string; ValueName: "Icon"; ValueData: "{app}\Transcriber.exe"; Tasks: contextmenu
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.jpeg\shell\TranscriberDescribeImage\command"; ValueType: string; ValueName: ""; ValueData: """{app}\ImageDescriber.exe"" ""%1"""; Tasks: contextmenu
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.png\shell\TranscriberDescribeImage"; ValueType: string; ValueName: ""; ValueData: "Описать изображение"; Flags: uninsdeletekey; Tasks: contextmenu
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.png\shell\TranscriberDescribeImage"; ValueType: string; ValueName: "Icon"; ValueData: "{app}\Transcriber.exe"; Tasks: contextmenu
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.png\shell\TranscriberDescribeImage\command"; ValueType: string; ValueName: ""; ValueData: """{app}\ImageDescriber.exe"" ""%1"""; Tasks: contextmenu
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.webp\shell\TranscriberDescribeImage"; ValueType: string; ValueName: ""; ValueData: "Описать изображение"; Flags: uninsdeletekey; Tasks: contextmenu
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.webp\shell\TranscriberDescribeImage"; ValueType: string; ValueName: "Icon"; ValueData: "{app}\Transcriber.exe"; Tasks: contextmenu
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.webp\shell\TranscriberDescribeImage\command"; ValueType: string; ValueName: ""; ValueData: """{app}\ImageDescriber.exe"" ""%1"""; Tasks: contextmenu
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.gif\shell\TranscriberDescribeImage"; ValueType: string; ValueName: ""; ValueData: "Описать изображение"; Flags: uninsdeletekey; Tasks: contextmenu
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.gif\shell\TranscriberDescribeImage"; ValueType: string; ValueName: "Icon"; ValueData: "{app}\Transcriber.exe"; Tasks: contextmenu
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.gif\shell\TranscriberDescribeImage\command"; ValueType: string; ValueName: ""; ValueData: """{app}\ImageDescriber.exe"" ""%1"""; Tasks: contextmenu
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.bmp\shell\TranscriberDescribeImage"; ValueType: string; ValueName: ""; ValueData: "Описать изображение"; Flags: uninsdeletekey; Tasks: contextmenu
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.bmp\shell\TranscriberDescribeImage"; ValueType: string; ValueName: "Icon"; ValueData: "{app}\Transcriber.exe"; Tasks: contextmenu
+Root: HKA; Subkey: "Software\Classes\SystemFileAssociations\.bmp\shell\TranscriberDescribeImage\command"; ValueType: string; ValueName: ""; ValueData: """{app}\ImageDescriber.exe"" ""%1"""; Tasks: contextmenu
+Root: HKA; Subkey: "Software\Classes\Directory\shell\TranscriberDescribeImages"; ValueType: string; ValueName: ""; ValueData: "Описать изображения в папке"; Flags: uninsdeletekey; Tasks: contextmenu
+Root: HKA; Subkey: "Software\Classes\Directory\shell\TranscriberDescribeImages"; ValueType: string; ValueName: "Icon"; ValueData: "{app}\Transcriber.exe"; Tasks: contextmenu
+Root: HKA; Subkey: "Software\Classes\Directory\shell\TranscriberDescribeImages\command"; ValueType: string; ValueName: ""; ValueData: """{app}\ImageDescriber.exe"" ""%1"""; Tasks: contextmenu
+
 [Run]
 Filename: "{app}\Transcriber.exe"; Description: "Запустить Transcriber"; Flags: nowait postinstall skipifsilent
 

@@ -21,6 +21,7 @@ from PyQt5.QtWidgets import (
     QMainWindow,
     QMessageBox,
     QPushButton,
+    QSpinBox,
     QTabWidget,
     QTextBrowser,
     QVBoxLayout,
@@ -254,15 +255,46 @@ class ChatExportTab(QWidget):
             "Только встроить готовые JSON/MD, не запускать Whisper"
         )
         self.force = QCheckBox(
-            "Перезаписать существующие транскрипции (--force)"
-        )
-        self.no_transcribe.toggled.connect(
-            lambda checked: self.force.setEnabled(not checked)
+            "Перезаписать существующие транскрипции и описания (--force)"
         )
 
+        self.describe_images = QCheckBox(
+            "Создавать текстовые описания фото и стикеров через Ollama"
+        )
+        self.vision_model = QComboBox()
+        self.vision_model.setEditable(True)
+        self.vision_model.addItems(
+            ["qwen3-vl-vision:latest", "qwen3-vl:8b", "qwen3-vl:4b", "qwen3-vl:2b"]
+        )
+        self.ollama_url = QLineEdit("http://127.0.0.1:11434")
+        self.vision_log = QCheckBox("Подробный лог ошибок Ollama (--log)")
+
+        self.export_md = QCheckBox("Создать текстовую Markdown-выгрузку для Obsidian")
+        self.md_chunk_size = QSpinBox()
+        self.md_chunk_size.setRange(50, 5000)
+        self.md_chunk_size.setValue(500)
+        self.md_chunk_size.setSuffix(" сообщений")
+        self.md_chunk_size.setEnabled(False)
+        self.export_md.toggled.connect(self.md_chunk_size.setEnabled)
+
+        markdown_group = QGroupBox("Текстовая выгрузка чата")
+        markdown_form = QFormLayout(markdown_group)
+        markdown_form.addRow("", self.export_md)
+        markdown_form.addRow("Размер одной части:", self.md_chunk_size)
+
+        vision_group = QGroupBox("Описание изображений")
+        vision_form = QFormLayout(vision_group)
+        vision_form.addRow("", self.describe_images)
+        vision_form.addRow("Vision-модель:", self.vision_model)
+        vision_form.addRow("Ollama API:", self.ollama_url)
+        vision_form.addRow("", self.vision_log)
+
+        self.no_transcribe.toggled.connect(self.update_force_enabled)
+        self.describe_images.toggled.connect(self.update_force_enabled)
+
         note = QLabel(
-            "Результаты медиа сохраняются в папку transcriptions внутри экспорта. "
-            "HTML перед первым изменением копируется в файл .bak."
+            "Расшифровки сохраняются в transcriptions, описания картинок — "
+            "в image_descriptions. HTML перед первым изменением копируется в .bak."
         )
         note.setWordWrap(True)
         note.setObjectName("note")
@@ -272,9 +304,17 @@ class ChatExportTab(QWidget):
         layout.addWidget(self.path_selector)
         layout.addWidget(self.no_transcribe)
         layout.addWidget(self.force)
+        layout.addWidget(vision_group)
+        layout.addWidget(markdown_group)
         layout.addWidget(note)
         layout.addWidget(self.options)
         layout.addStretch(1)
+
+    def update_force_enabled(self) -> None:
+        self.vision_log.setEnabled(self.describe_images.isChecked())
+        self.force.setEnabled(
+            not self.no_transcribe.isChecked() or self.describe_images.isChecked()
+        )
 
     def command(self) -> tuple[Path, list[str]]:
         paths = self.path_selector.values()
@@ -284,7 +324,17 @@ class ChatExportTab(QWidget):
         arguments = [*paths, *self.options.arguments()]
         if self.no_transcribe.isChecked():
             arguments.append("--no-transcribe")
-        elif self.force.isChecked():
+        if self.describe_images.isChecked():
+            arguments.extend([
+                "--describe-images",
+                "--vision-model", self.vision_model.currentText().strip(),
+                "--ollama-url", self.ollama_url.text().strip(),
+            ])
+        if self.vision_log.isChecked() and self.describe_images.isChecked():
+            arguments.append("--log")
+        if self.export_md.isChecked():
+            arguments.extend(["--export-md", "--md-chunk-size", str(self.md_chunk_size.value())])
+        if self.force.isChecked() and self.force.isEnabled():
             arguments.append("--force")
         return APP_DIR / "chat_export_parser.py", arguments
 
@@ -296,19 +346,42 @@ class ChatExportTab(QWidget):
         self.force.setChecked(
             settings.value("chat_export/force", False, type=bool)
         )
-        self.force.setEnabled(not self.no_transcribe.isChecked())
+        self.describe_images.setChecked(
+            settings.value("chat_export/describe_images", False, type=bool)
+        )
+        self.vision_model.setCurrentText(
+            settings.value("chat_export/vision_model", "qwen3-vl:8b")
+        )
+        self.ollama_url.setText(
+            settings.value("chat_export/ollama_url", "http://127.0.0.1:11434")
+        )
+        self.vision_log.setChecked(
+            settings.value("chat_export/vision_log", False, type=bool)
+        )
+        self.export_md.setChecked(
+            settings.value("chat_export/export_md", False, type=bool)
+        )
+        self.md_chunk_size.setValue(
+            settings.value("chat_export/md_chunk_size", 500, type=int)
+        )
+        self.update_force_enabled()
 
     def save_settings(self, settings: QSettings) -> None:
         self.options.save_settings(settings, "chat_export")
         settings.setValue("chat_export/no_transcribe", self.no_transcribe.isChecked())
         settings.setValue("chat_export/force", self.force.isChecked())
-
+        settings.setValue("chat_export/describe_images", self.describe_images.isChecked())
+        settings.setValue("chat_export/vision_model", self.vision_model.currentText())
+        settings.setValue("chat_export/ollama_url", self.ollama_url.text())
+        settings.setValue("chat_export/vision_log", self.vision_log.isChecked())
+        settings.setValue("chat_export/export_md", self.export_md.isChecked())
+        settings.setValue("chat_export/md_chunk_size", self.md_chunk_size.value())
 
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Transcriber")
-        self.resize(850, 780)
+        self.resize(880, 900)
 
         self.settings = QSettings("LocalTools", "Transcriber")
         self.process = QProcess(self)

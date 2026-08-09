@@ -16,6 +16,7 @@ installer/output/
 ChatExport_*/
 demo/
 transcriptions/
+image_descriptions/
 *.html.bak
 
 # IDE / OS

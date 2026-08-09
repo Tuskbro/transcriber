@@ -5,6 +5,7 @@ chcp 65001 >nul
 set "APP_DIR=%~dp0"
 set "RUNNER=%APP_DIR%run_transcriber.bat"
 set "CHAT_RUNNER=%APP_DIR%run_chat_export_parser.bat"
+set "IMAGE_RUNNER=%APP_DIR%run_image_describer.bat"
 
 if not exist "%APP_DIR%.venv\Scripts\python.exe" (
     echo [ERROR] Не найден .venv\Scripts\python.exe
@@ -37,10 +38,20 @@ if not exist "%CHAT_RUNNER%" (
     exit /b 1
 )
 
+if not exist "%IMAGE_RUNNER%" (
+    echo [ERROR] Не найден файл run_image_describer.bat
+    pause
+    exit /b 1
+)
 for %%E in (.mp3 .wav .ogg .opus .m4a .aac .flac .mp4 .mkv .webm) do (
     call :AddFileMenu "HKCU\Software\Classes\SystemFileAssociations\%%E\shell\TranscriberToMarkdown" "Транскрибировать в Markdown" "md"
     if errorlevel 1 goto :error
     call :AddFileMenu "HKCU\Software\Classes\SystemFileAssociations\%%E\shell\TranscriberToJson" "Транскрибировать в JSON" "json"
+    if errorlevel 1 goto :error
+)
+
+for %%E in (.jpg .jpeg .png .webp .gif .bmp) do (
+    call :AddImageMenu "HKCU\Software\Classes\SystemFileAssociations\%%E\shell\TranscriberDescribeImage"
     if errorlevel 1 goto :error
 )
 
@@ -54,6 +65,8 @@ if errorlevel 1 goto :error
 call :AddFolderMenu "HKCU\Software\Classes\Directory\shell\TranscriberToJson" "Транскрибировать в JSON" "json"
 if errorlevel 1 goto :error
 call :AddChatFolderMenu "HKCU\Software\Classes\Directory\shell\TranscriberChatExport"
+if errorlevel 1 goto :error
+call :AddImageFolderMenu "HKCU\Software\Classes\Directory\shell\TranscriberDescribeImages"
 if errorlevel 1 goto :error
 
 call :AddBackgroundMenu "HKCU\Software\Classes\Directory\Background\shell\TranscriberToMarkdown" "Транскрибировать в Markdown" "md"
@@ -105,6 +118,17 @@ reg add "%~1" /v "Icon" /d "%APP_DIR%.venv\Scripts\python.exe" /f >nul
 reg add "%~1\command" /ve /d "\"%CHAT_RUNNER%\" \"%%V\"" /f >nul
 exit /b %errorlevel%
 
+:AddImageMenu
+reg add "%~1" /ve /d "Описать изображение" /f >nul
+reg add "%~1" /v "Icon" /d "%APP_DIR%.venv\Scripts\python.exe" /f >nul
+reg add "%~1\command" /ve /d "\"%IMAGE_RUNNER%\" \"%%1\"" /f >nul
+exit /b %errorlevel%
+
+:AddImageFolderMenu
+reg add "%~1" /ve /d "Описать изображения в папке" /f >nul
+reg add "%~1" /v "Icon" /d "%APP_DIR%.venv\Scripts\python.exe" /f >nul
+reg add "%~1\command" /ve /d "\"%IMAGE_RUNNER%\" \"%%1\"" /f >nul
+exit /b %errorlevel%
 :error
 echo.
 echo [ERROR] Не удалось установить контекстное меню.
